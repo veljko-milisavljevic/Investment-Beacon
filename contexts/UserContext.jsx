@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { account } from "../lib/appwrite"
 import { ID } from "react-native-appwrite";
 import { useRouter  } from "expo-router";
@@ -7,6 +7,7 @@ export const UserContext = createContext()
 
 export function UserProvider({ children }) {
     const [user, setUser] = useState(null)
+    const [authChecked, setAuthChecked] = useState(false)
 
     const router = useRouter();
 
@@ -21,12 +22,13 @@ export function UserProvider({ children }) {
         }
     }
 
-    async function register(email, password, fullName, phoneNumber, IPS){
+    async function register(email, password, fullName, phoneNumber, IPS, investorType){
         try {
             await account.create(ID.unique(), email, password, fullName)
             await login(email,password)
             await account.updatePhone(phoneNumber, password)
-            await account.updatePrefs({IPS})
+            //await account.updatePrefs({IPS})
+            await account.updatePrefs({ "Investor Type": investorType }) //Investor type: Konzervativan/Balansiran/Agresivan
         } catch(error){
             throw Error(error.message)
         }
@@ -38,8 +40,23 @@ export function UserProvider({ children }) {
         router.replace('/login')
     }
 
+    async function getInitialUserValue() {
+        try{
+            const response = await account.get()
+            setUser(response)
+        }catch (error){
+            setUser(null)
+        }finally{
+            setAuthChecked(true)
+        }
+    }
+
+    useEffect(() => {
+        getInitialUserValue()
+    }, [])
+
     return(
-        <UserContext.Provider value={{ user, login, register, logout }}>
+        <UserContext.Provider value={{ user, login, register, logout, authChecked }}>
             {children}
         </UserContext.Provider>
     )

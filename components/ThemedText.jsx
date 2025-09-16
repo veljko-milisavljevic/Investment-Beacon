@@ -1,7 +1,7 @@
 import { Text, useColorScheme } from 'react-native'
 import { Colors } from '../constants/Colors'
 
-const ThemedView = ({style, title = false, ...props}) => {
+const ThemedText = ({style, title = false, ...props}) => {
     const colorScheme = useColorScheme()
     const theme = Colors[colorScheme] ?? Colors.light
 
@@ -15,4 +15,4 @@ const ThemedView = ({style, title = false, ...props}) => {
   )
 }
 
-export default ThemedView
+export default ThemedText

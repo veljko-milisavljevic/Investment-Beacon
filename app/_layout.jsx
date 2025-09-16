@@ -4,6 +4,7 @@ import { Slot, Stack } from 'expo-router'
 import { Colors } from '../constants/Colors'
 import { StatusBar } from 'expo-status-bar'
 import { UserProvider } from '../contexts/UserContext'
+import { PortfolioProvider } from '../contexts/PortfoliosContext'
 
 const RootLayout = () => {
 
@@ -12,6 +13,7 @@ const RootLayout = () => {
 
   return (
     <UserProvider>
+      <PortfolioProvider>
       <StatusBar style="auto" />  
       {/*<Stack>
           <Stack.Screen name="index" options={{ title:"Početna" }} />
@@ -20,7 +22,7 @@ const RootLayout = () => {
           <Stack.Screen name="(dashboard)" options={{ headerShown: false }} />
       </Stack>*/}
       <Slot/>
-        
+      </PortfolioProvider>
     </UserProvider>
     
   )

@@ -20,7 +20,7 @@ const Profile = () => {
       {user && <ThemedText>Dobrodošao, {user.name}</ThemedText>}
       <Spacer />
 
-      <ThemedText style={{ textAlign: "center" }}>Osnovne informacije o korisniku, ? kakav je investitor ?, mogućnost ponovnog popunjavanja upitnika</ThemedText>
+      <ThemedText style={{ textAlign: "center" }}>Tip investitora: {user?.prefs?.["Investor Type"]}</ThemedText>
       <Spacer />
 
       <ThemedButton onPress={logout}>

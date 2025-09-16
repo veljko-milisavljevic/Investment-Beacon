@@ -17,16 +17,23 @@ const register = () => {
     const [password, setPassword] = useState("")
     const [fullName, setName] = useState("")
     const [phoneNumber, setPhoneNumber] = useState("")
-    const [IPS, setIPS] = useState(Array(12).fill(''))
+    const [IPS, setIPS] = useState(Array(11).fill(''))
+    const [points, setPoints] = useState(Array(11).fill(''))
 
     const [error, setError] = useState(null)
 
     const { register } = useUser()
 
-    const handleSelect = (i, choiceChar) => {
+    const handleSelect = (i, choiceChar, choicePoints) => {
         setIPS(prev => {
             const next = [...prev]
             next[i] = choiceChar
+            return next
+        })
+
+        setPoints(prev => {
+            const next = [...prev]
+            next[i] = choicePoints
             return next
         })
     }
@@ -34,8 +41,24 @@ const register = () => {
     const handleSubmit = async () => {
         setError(null)
         const ipsString = IPS.join('')
+        let invType = 'Balansiran'
+        
         try {
-            await register(email, password, fullName, phoneNumber, ipsString)
+            const totalScore = points.reduce((sum, val) => sum + val, 0)
+            console.log(points)
+            console.log(totalScore)
+            if(totalScore >= 25){
+                console.log("Agresivan")
+                invType = "Agresivan"
+            } else if(totalScore >=15){
+                console.log("Balansiran")
+                invType = "Balansiran"
+            } else {
+                console.log("Konzervativan")
+                invType = "Konzervativan"
+            }
+
+            await register(email, password, fullName, phoneNumber, ipsString, invType)
         } catch (e) {
             setError(e.message)
         }
@@ -45,31 +68,101 @@ const register = () => {
         {
             prompt: '1. Koji je osnovni cilj vašeg investiranja?',
             choices: [
-                { char: 'A', text: 'Očuvanje kapitala (minimalni rizik)' },
-                { char: 'B', text: 'Stabilni prihodi (npr. dividende)' },
-                { char: 'C', text: 'Umeren rast kapitala' },
-                { char: 'D', text: 'Maksimalni rast kapitala (spreman/spremna sam na veći rizik)' },
+                { char: 'A', text: 'Očuvanje kapitala (minimalni rizik)', points: 0 },
+                { char: 'B', text: 'Stabilni prihodi (npr. dividende)', points: 1 },
+                { char: 'C', text: 'Umeren rast kapitala', points: 2 },
+                { char: 'D', text: 'Maksimalni rast kapitala (spreman/spremna sam na veći rizik)', points: 3 },
             ],
         },
         {
             prompt: '2. Na koliko dugo planirate da investirate većinu svog kapitala?',
             choices: [
-                { char: 'A', text: 'Kraće od 1 godine' },
-                { char: 'B', text: '1–3 godine' },
-                { char: 'C', text: '3–5 godina' },
-                { char: 'D', text: '5–10 godina' },
-                { char: 'E', text: 'Duže od 10 godina' },
+                { char: 'A', text: 'Kraće od 1 godine', points: 0 },
+                { char: 'B', text: '1–3 godine', points: 1 },
+                { char: 'C', text: '3–5 godina', points: 2 },
+                { char: 'D', text: '5–10 godina', points: 3 },
+                { char: 'E', text: 'Duže od 10 godina', points: 4 },
             ],
         },
         {
             prompt: '3. Koliko ste spremni da vaš portfolio privremeno izgubi vrednost tokom tržišnih padova?',
             choices: [
-                { char: 'A', text: 'Ne želim nikakav pad' },
-                { char: 'B', text: 'Do 10% gubitka' },
-                { char: 'C', text: 'Do 20% gubitka' },
+                { char: 'A', text: 'Ne želim nikakav pad', points: 0 },
+                { char: 'B', text: 'Do 10% gubitka', points: 1 },
+                { char: 'C', text: 'Do 20% gubitka', points: 2 },
+                { char: 'D', text: 'Više od 20% gubitka', points: 3 },
+            ],
+        },
+        {
+            prompt: '4. Kako biste emocionalno reagovali na pad vrednosti portfolija od 20%?',
+            choices: [
+                { char: 'A', text: 'Veoma bih se uznemirio', points: 0 },
+                { char: 'B', text: 'Bio bih zabrinut ali bih ostao investiran', points: 2 },
+                { char: 'C', text: 'Ne bih se uznemirio', points: 3 },
+            ],
+        },
+        {
+            prompt: '5. Kakvo je vaše znanje i iskustvo u investiranju?',
+            choices: [
+                { char: 'A', text: 'Bez iskustva', points: 0 },
+                { char: 'B', text: 'Malo iskustva', points: 1 },
+                { char: 'C', text: 'Umereno iskustvo', points: 2 },
+                { char: 'D', text: 'Iskusni investitor', points: 3 },
+            ],
+        },
+        {
+            prompt: '6. Koliki je vaš godišnji prihod?',
+            choices: [
+                { char: 'A', text: 'Manje od 6.000€', points: 0 },
+                { char: 'B', text: '6.000 – 15.000€', points: 1 },
+                { char: 'C', text: '15.000 – 30.000€', points: 2 },
+                { char: 'D', text: 'Više od 30.000€', points: 3 },
+            ],
+        },
+        {
+            prompt: '7. Kolika je ukupna vrednost vaše imovine?',
+            choices: [
+                { char: 'A', text: 'Manje od 20.000€', points: 0 },
+                { char: 'B', text: '20.000 – 50.000€', points: 1 },
+                { char: 'C', text: '50.000 – 150.000€', points: 2 },
+                { char: 'D', text: 'Više od 150.000€', points: 3 },
+            ],
+        },
+        {
+            prompt: '8. Koliki procenat vaše imovine planirate da investirate?',
+            choices: [
+                { char: 'A', text: 'Manje od 10%', points: 0 },
+                { char: 'B', text: '10% – 25%', points: 1 },
+                { char: 'C', text: '25% – 50%', points: 2 },
+                { char: 'D', text: 'Više od 50%', points: 3 },
+            ],
+        },
+        {
+            prompt: '9. Da li očekujete da vam zatreba deo investiranog novca u naredne 1–3 godine?',
+            choices: [
+                { char: 'A', text: 'Sigurno da', points: 0 },
+                { char: 'B', text: 'Možda, ali ne verovatno', points: 1 },
+                { char: 'C', text: 'Ne, dugoročno investiranje', points: 3 },
+            ],
+        },
+        {
+            prompt: '10. Kako biste reagovali ako vaša investicija ostvari slabiji prinos od očekivanog?',
+            choices: [
+                { char: 'A', text: 'Odmah bih promenio strategiju', points: 0 },
+                { char: 'B', text: 'Možda bih sačekao neko vreme', points: 1 },
+                { char: 'C', text: 'Ostaću dosledan strategiji', points: 3 },
+            ],
+        },
+        {
+            prompt: '11. Koja je vaša investiciona preferencija?',
+            choices: [
+                { char: 'A', text: 'Sigurnost i stabilnost', points: 0 },
+                { char: 'B', text: 'Ravnoteža rasta i rizika', points: 2 },
+                { char: 'C', text: 'Visok rast uz veće oscilacije', points: 3 },
             ],
         },
     ]
+
 
     return (
 
@@ -119,7 +212,7 @@ const register = () => {
                             {q.choices.map(choice => (
                                 <ThemedButton
                                     key={choice.char}
-                                    onPress={() => handleSelect(i, choice.char)}
+                                    onPress={() => handleSelect(i, choice.char, choice.points)}
                                     style={[
                                         IPS[i] === choice.char ? styles.selectedChoice : styles.choiceButton,
                                     ]}
