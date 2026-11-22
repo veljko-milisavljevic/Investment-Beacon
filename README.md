@@ -115,9 +115,17 @@ The app does not read `.env` yet. Replace the Appwrite project ID in `lib/appwri
    - Environment variables: `OPENAI_API_KEY` (required) and `OPENAI_MAX_TOKENS` (optional, default 512)
 4. Put the deployed function's ID in `hooks/useChatbot.js`.
 
+## Notes & known limitations
+
+- **Thesis prototype.** Tested on Android only; the UI text is in Serbian.
+- **Hardcoded Appwrite IDs.** The project ID, database ID and function ID are set in `lib/appwrite.js`, `contexts/PortfoliosContext.jsx` and `hooks/useChatbot.js`; the app does not read `.env` yet. These are public client identifiers, not secrets.
+- **Chatbot debug leftovers.** The function is based on Appwrite's *Prompt ChatGPT* template. It currently logs the request body and lists the available OpenAI models on every call. Fine for a demo, but this should be removed for production.
+- **Questionnaire storage.** Only the resulting investor profile is stored (in Appwrite account preferences), not the individual answers or the score (see Roadmap).
+- **Biometric login** relies on Android Autofill and a password manager (e.g. Samsung Pass), not on a native biometric API.
+
 ## Roadmap
 
-- Store the full questionnaire answers server-side, not just the score, to enable richer profiling.
+- Store the full questionnaire answers server-side, not just the resulting profile, to enable richer profiling.
 - Expand the user profile screen.
 - Give the assistant context about the user's own profile and portfolio.
 - iOS build. The codebase is already cross-platform.
