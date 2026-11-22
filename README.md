@@ -19,7 +19,7 @@ Built as my BSc thesis, *"Development of an Android Mobile Application for Begin
   - **Aggressive:** 25 points or more
   - **Balanced:** 15–24 points
   - **Conservative:** fewer than 15 points
-- **Login, including biometrics.** Email/password login through Appwrite sessions. The login fields are marked so Android's Autofill framework recognises them, which enables fingerprint login through password managers such as Samsung Pass.
+- **Login, including biometrics.** Email/password login through Appwrite sessions. Android Autofill can fill the login fields, so password managers such as Samsung Pass can offer fingerprint login. The app has no biometric code of its own.
 - **Persistent session and protected routes.** The user object is held in a global `UserContext`, so it survives app restarts. A `UserOnly` guard redirects guests away from the dashboard.
 - **Portfolio recommendation and visualisation.** The investor profile selects a portfolio from the Appwrite database. Its ETFs and weights are rendered as a sorted pie chart with a legend using `react-native-chart-kit`.
 - **AI assistant.** Users ask questions in natural language. Requests go through an Appwrite Function that calls the OpenAI API, so the API key never ships in the app.
@@ -85,10 +85,12 @@ functions/chatbot  Appwrite Function that proxies prompts to OpenAI
 ## Getting started
 
 **Prerequisites:**
-- Node.js 18+
-- An Appwrite project (Cloud or self-hosted)
-- An OpenAI API key, for the assistant
-- An Android device with Expo Go, or an emulator
+- [Git](https://git-scm.com/downloads)
+- [Node.js](https://nodejs.org/en/download) 20.19.4+
+- An [Appwrite](https://appwrite.io/docs) project (Cloud or self-hosted)
+- An [OpenAI API key](https://platform.openai.com/api-keys), for the assistant
+- An Android device with [Expo Go](https://expo.dev/go), or an emulator
+- For `npm run android` only: [Android Studio with the Android SDK, and JDK 17](https://reactnative.dev/docs/set-up-your-environment)
 
 **1. Install and run the app:**
 
@@ -96,16 +98,15 @@ functions/chatbot  Appwrite Function that proxies prompts to OpenAI
 git clone https://github.com/veljko-milisavljevic/Investment-Beacon.git
 cd Investment-Beacon
 npm install
-cp .env.example .env      # fill in your Appwrite values
 npx expo start            # scan the QR code with Expo Go
 # or build a native dev client:
 npm run android
 ```
 
-The Appwrite project ID is currently set in `lib/appwrite.js`. Replace it with your own project's ID.
+The app does not read `.env` yet. Replace the Appwrite project ID in `lib/appwrite.js` with your own. The client uses the SDK's default Appwrite Cloud endpoint, so for another region or a self-hosted server also add `.setEndpoint(...)` there.
 
 **2. Set up the Appwrite backend:**
-1. Create a database with three collections: `portfolios`, `etfs` and `portfolio_contents`. Add one portfolio per investor profile (aggressive, balanced, conservative). Set your database ID in `contexts/PortfoliosContext.jsx`.
+1. Create a database with three collections: `portfolios`, `etfs` and `portfolio_contents`. Add one portfolio per investor profile (aggressive, balanced, conservative). In `contexts/PortfoliosContext.jsx`, set your database ID and the document IDs of the three portfolios.
 2. Register an Android platform with the package name `dev.investment_beacon.investment_app`.
 3. Deploy the assistant function from `functions/chatbot`:
    - Runtime: Node 18+
