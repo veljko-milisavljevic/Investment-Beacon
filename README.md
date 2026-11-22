@@ -130,6 +130,10 @@ The app does not read `.env` yet. Replace the Appwrite project ID in `lib/appwri
 - Give the assistant context about the user's own profile and portfolio.
 - iOS build. The codebase is already cross-platform.
 
+## License
+
+[MIT](LICENSE)
+
 ## Author
 
 **Veljko Milisavljević** · [LinkedIn](https://www.linkedin.com/in/veljko-milisavljevi%C4%87-72419542b/) · [GitHub](https://github.com/veljko-milisavljevic)
