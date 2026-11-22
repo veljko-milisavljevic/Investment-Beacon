@@ -6,6 +6,7 @@ import { useUser } from "../hooks/useUser"
 const DATABASE_ID = "68b7157f002323860dc0"
 const ETF_COLLECTION_ID = "etfs"
 const COLLECTION_ID = "portfolios"
+const PORTFOLIO_CONTENTS_COLLECTION_ID = "portfolio_contents";
 
 export const PortfoliosContext = createContext()
 
@@ -15,27 +16,34 @@ export function PortfolioProvider({ children }) {
     const { user } = useUser()
 
     async function fetchEtfsFromPortfolio(portfolio) {
-        try {
-            const etfDocs = await Promise.all(
-                portfolio.portfolioContents.map(async (item) => {
-                    //console.log(JSON.stringify(item, null, 2))
-                    const etf = await databases.getDocument(
-                        DATABASE_ID,
-                        ETF_COLLECTION_ID,
-                        item.content.$id
-                    );
+      try {
+        // 1. get all contents for this portfolio
+        const contents = await databases.listDocuments(
+          DATABASE_ID,
+          PORTFOLIO_CONTENTS_COLLECTION_ID,
+          [Query.equal("portfolios", portfolio.$id)]
+        );
 
-                    return {
-                        ...etf,
-                        percentage: item.percentage
-                    };
-                })
+        // 2. fetch ETF docs in parallel
+        const etfDocs = await Promise.all(
+          contents.documents.map(async (item) => {
+            const etf = await databases.getDocument(
+              DATABASE_ID,
+              ETF_COLLECTION_ID,
+              item.content
             );
 
-            setEtfs(etfDocs);
-        } catch (error) {
-            console.error(error.message);
-        }
+            return {
+              ...etf,
+              percentage: item.percentage,
+            };
+          })
+        );
+
+        setEtfs(etfDocs);
+      } catch (error) {
+        console.error("Error fetching ETFs:", error.message);
+      }
     }
 
     async function fetchPortfolioByUser(id) {
@@ -48,10 +56,11 @@ export function PortfolioProvider({ children }) {
 
             setPortfolio(response)
             //console.log(response.name)
+            //console.log(JSON.stringify(response, null, 2))
             await fetchEtfsFromPortfolio(response);
             //console.log(JSON.stringify(etfs, null, 2))
         } catch (error) {
-            console.log(error.message)
+            //console.log(error.message)
         }
     }
 

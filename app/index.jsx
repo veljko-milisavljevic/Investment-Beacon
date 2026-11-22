@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Image, useColorScheme } from 'react-native'
-import { Link } from 'expo-router'
+import { Link, Redirect } from 'expo-router'
 import { Colors } from '../constants/Colors'
 
 //Themed components
@@ -13,7 +13,8 @@ const Home = () => {
     const theme = Colors[colorScheme] ?? Colors.light
     
   return (
-    <ThemedView style={styles.container}>
+    <Redirect href="/profile"/>
+    /*ThemedView style={styles.container}>
         <ThemedLogo style={styles.img}/>
 
         <ThemedText title = {true} style = {styles.title}>Početna strana</ThemedText>
@@ -27,7 +28,7 @@ const Home = () => {
         <Spacer/>
         <Link href="/profile"><ThemedText>Moj profil</ThemedText></Link>
         
-    </ThemedView>
+    </ThemedView>*/
   )
 }
 

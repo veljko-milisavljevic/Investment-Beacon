@@ -29,6 +29,8 @@ export function UserProvider({ children }) {
             await account.updatePhone(phoneNumber, password)
             //await account.updatePrefs({IPS})
             await account.updatePrefs({ "Investor Type": investorType }) //Investor type: Konzervativan/Balansiran/Agresivan
+            const updatedUser = await account.get()
+            setUser(updatedUser)
         } catch(error){
             throw Error(error.message)
         }
@@ -44,6 +46,7 @@ export function UserProvider({ children }) {
         try{
             const response = await account.get()
             setUser(response)
+            console.log(JSON.stringify(response, null, 2))
         }catch (error){
             setUser(null)
         }finally{

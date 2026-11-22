@@ -20,7 +20,7 @@ const Profile = () => {
       {user && <ThemedText>Dobrodošao, {user.name}</ThemedText>}
       <Spacer />
 
-      <ThemedText style={{ textAlign: "center" }}>Tip investitora: {user?.prefs?.["Investor Type"]}</ThemedText>
+      <ThemedText style={{ textAlign: "center" }}>Tip investitora: {user?.prefs?.["Investor Type"] ?? "Nepoznat"}</ThemedText>
       <Spacer />
 
       <ThemedButton onPress={logout}>

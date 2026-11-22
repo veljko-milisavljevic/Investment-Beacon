@@ -1,9 +1,11 @@
 import { Text, useColorScheme } from 'react-native'
 import { Colors } from '../constants/Colors'
 
-const ThemedText = ({style, title = false, ...props}) => {
+const ThemedText = ({style,reverse = false, title = false, ...props}) => {
     const colorScheme = useColorScheme()
-    const theme = Colors[colorScheme] ?? Colors.light
+    const themeBool = (Colors[colorScheme] == Colors.light) ^ reverse //True - Light; False - Dark
+    const theme = themeBool ? Colors.light : Colors.dark
+        
 
     const textColor = title ? theme.title : theme.text
 

@@ -9,6 +9,7 @@ import { Colors } from '../../constants/Colors'
 import Spacer from "../../components/Spacer"
 import ThemedText from "../../components/ThemedText"
 import ThemedView from "../../components/ThemedView"
+import ThemedCard from '../../components/ThemedCard'
 
 
 
@@ -19,45 +20,47 @@ const Portfolio = () => {
 
   const { portfolio, etfs } = usePortfolio()
   const screenWidth = Dimensions.get('window').width
-  const defaultColors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
+  const defaultColors = ['#3475B7', '#082B4E', '#5293D2', '#23609D', '#041E37']
 
 
   const chartData = etfs.map((item, index) => ({
     name: item.name,
     population: item.percentage,
     color: defaultColors[index % defaultColors.length],
-    legendFontColor: theme.text,
+    legendFontColor: "#404040",
     legendFontSize: 18,
   })).sort((a, b) => b.population - a.population)
 
 
   return (
-    <ThemedView style={styles.container} safe={true}>   
+    <ThemedView style={styles.container} safe={true}>
+      <ThemedCard>
+        {etfs.length > 0 ? (
+          <><PieChart
+            data={chartData}
+            width={screenWidth - 32}
+            height={220}
+            chartConfig={{
+              color: () => '#ffffffff',
+            }}
+            accessor={'population'}
+            backgroundColor={'transparent'}
+            paddingLeft={'15'}
+            center={[0, 0]}
+            absolute={false}
+          />
 
-      {etfs.length > 0 ? (
-        <><PieChart
-        data={chartData}
-        width={screenWidth - 32}
-        height={220}
-        chartConfig={{
-          color: () => '#ffffffff',
-        }}
-        accessor={'population'}
-        backgroundColor={'transparent'}
-        paddingLeft={'15'}
-        center={[0, 0]}
-        absolute={false}
-      />
+            <Spacer />
 
-      <Spacer/>
+            <ThemedText reverse={true} title={true} style={styles.heading}>{portfolio.name} portfolio</ThemedText>
 
-      <ThemedText title={true} style={styles.heading}>{portfolio.name} portfolio</ThemedText>
+            <ThemedText reverse={true}>Procenjeni rast {portfolio.yearly_increase}%</ThemedText>
+          </>
+        ) : (
+          <ThemedText>Vaš portfolio je trenutno prazan.</ThemedText>
+        )}
+      </ThemedCard>
 
-      <ThemedText>Procenjeni rast ??%</ThemedText>
-      </>
-      ) : (
-        <ThemedText>Vaš portfolio je trenutno prazan.</ThemedText>
-      )}
 
     </ThemedView>
   )

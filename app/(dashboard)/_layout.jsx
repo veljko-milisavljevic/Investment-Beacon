@@ -49,10 +49,10 @@ const DashboardLayout = () => {
                 <Tabs.Screen
                     name="news"
                     options={{
-                        title: 'Vesti', tabBarIcon: ({ focused }) => (
+                        title: 'Edukacija', tabBarIcon: ({ focused }) => (
                             <Ionicons
                                 size={24}
-                                name={focused ? "newspaper" : "newspaper-outline"}
+                                name={focused ? "book" : "book-outline"}
                                 color={focused ? theme.iconColorFocused : theme.iconColor}
                             />
                         )

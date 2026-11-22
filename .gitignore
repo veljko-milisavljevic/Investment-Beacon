@@ -35,3 +35,20 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+# env files (keep .env.example)
+.env
+.env.*
+!.env.example
+
+# generated native projects (expo prebuild)
+/android
+/ios
+
+# IDE
+.idea/
+.vscode/
+
+# Appwrite CLI
+.appwrite/
+functions/*/node_modules/
